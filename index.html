@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta author="Sai Pranay">
+        <title>Take Wing and Fly</title>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo__container header container ">
+                <a class="logo" href="/" title="Travel Planner">
+                    <span class="logo"></span></a>
+            </div>
+        </header>
+        
+            <input id="taskInput" placeholder="Place your task here"><br>
+            <input id="taskPriority" placeholder="Place task priority (1-10)"><br>
+            <button id="addTaskButton">Add task</button>
+        
+            <ul id="taskList">
+        
+            </ul>
+        
+            <button id="removeFinishedTasksButton">Remove finished tasks</button>
+        
+        <footer class="footer-distributed">
+            <div class="footer-left">
+                <h3>Travel
+                        Planner</h3>
+                <p class="footer-company-name">Sai Pranay © 2020</p>
+                <div class="footer-icons">
+                    <a href="https://www.facebook.com/sbsaipranay19/">
+                        <i class="fab fa-facebook fa-lg"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/sai-pranay-187022165/">
+                        <i class="fab fa-linkedin fa-lg"></i>
+                    </a>
+                    <a href="https://github.com/sbsaipranay19">
+                        <i class="fab fa-github fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <p>Contact Us</p>
+                <form action="#" method="post">
+                    <input type="text" name="email" placeholder="Email">
+                    <textarea name="message" placeholder="Message"></textarea>
+                    <button class="send">Send</button>
+                </form>
+            </div>
+        </footer>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+     var add = document.getElementById("addTaskButton");
+     var removeFinished = document.getElementById("removeFinishedTasksButton");
+     var task = document.getElementById("taskInput");
+     var list = document.getElementById("taskList");
+     var body = document.querySelector("body");
+     var prior = document.getElementById("taskPriority");
+
+     //To do counter
+     var toDo = document.createElement("span");
+     body.insertBefore(toDo, list);
+     var allTasks = document.querySelectorAll("li");
+     var counter = allTasks.length;
+     //Add task
+     add.addEventListener("click", function () {
+         if (task.value.length >= 5 &&
+         task.value.length <= 100 &&
+         prior.value > 0 &&
+         prior.value <= 10) {
+
+     //Add task to the list
+
+        var newTask = document.createElement("li");
+        newTask.dataset.priority = prior.value;
+        var all = document.querySelectorAll("li");
+        var index = all.length;
+        
+        for (var i = 0; i < all.length; i++) {
+            if (parseInt(newTask.dataset.priority) < parseInt(all[i].dataset.priority)) {
+                index = i;
+                break;
+            }
+        }
+
+        list.insertBefore(newTask, all[index]);
+        var taskName = document.createElement("h1");
+        newTask.appendChild(taskName);
+        taskName.innerHTML = task.value;
+
+        //Add delete button
+        var delBtn = document.createElement("button");
+        newTask.appendChild(delBtn);
+        delBtn.innerHTML = "Delete";
+        delBtn.classList.add("delete");
+
+        //Add complete button
+        var complBtn = document.createElement("button");
+        newTask.appendChild(complBtn);
+        complBtn.innerHTML = "Complete";
+        complBtn.classList.add("complete");
+
+        counter++;
+        toDo.innerHTML = "Tasks to do: " + counter;
+
+        //Mark completed in red and adjust counter
+        complBtn.addEventListener("click", function () {
+            if (this.parentElement.style.color === "") {
+                this.parentElement.style.color = "#1f4068";
+                this.parentElement.setAttribute("done", "yes");
+                counter--;
+                toDo.innerHTML = "Tasks to do: " + counter;
+            } else if (this.parentElement.style.color === "red") {
+                this.parentElement.style.color = "";
+                this.parentElement.removeAttribute("done");
+                counter++;
+                toDo.innerHTML = "Tasks to do: " + counter;
+            }
+        });
+
+        //Delete selected item and adjust counter
+        delBtn.addEventListener("click", function () {
+            this.parentElement.parentNode.removeChild(this.parentElement);
+            counter--;
+            toDo.innerHTML = "Tasks to do: " + counter;
+        });
+
+        task.value = "";
+        prior.value = "";
+         
+    } else {
+
+        event.preventDefault();
+        alert("Task should have from 5 to 100 characters. Priority should be an integer between 1 and 10");
+    }
+});
+  
+//Remove completed items
+removeFinished.addEventListener("click", function () {
+    var tasks = document.querySelectorAll("li");
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].hasAttribute("done")) {
+            tasks[i].parentNode.removeChild(tasks[i]);
+        }
+    }
+});
+
+});
+        </script>
+    </body>
+</html>
